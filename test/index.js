@@ -13,13 +13,23 @@ describe('Plugin', () => {
     it(`should ${caseName.split('-').join(' ')}`, () => {
       const fixtureDir = path.join(fixturesDir, caseName);
       const actualPath = path.join(fixtureDir, 'actual.js');
-      const actual = transformFileSync(actualPath).code;
 
-      const expected = fs.readFileSync(
-          path.join(fixtureDir, 'expected.js')
-      ).toString();
+      if (caseName.indexOf('reject') === 0) {
+        const exception = fs.readFileSync(
+            path.join(fixtureDir, 'exception.txt')
+        ).toString();
 
-      assert.equal(trim(actual), trim(expected));
+        assert.throws(() => {
+          transformFileSync(actualPath);
+        }, exception);
+      } else {
+        const actual = transformFileSync(actualPath).code;
+        const expected = fs.readFileSync(
+            path.join(fixtureDir, 'expected.js')
+        ).toString();
+
+        assert.equal(trim(actual), trim(expected));
+      }
     });
   });
 });

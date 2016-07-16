@@ -10,8 +10,14 @@ export default function ({ types: t }) {
           callee.object.name = opts.systemGlobal || 'System';
 
           // System.register(deps, declare)
-          if (opts.moduleName && t.isArrayExpression(args[0])) {
-            args.unshift(t.stringLiteral(opts.moduleName));
+          if (t.isArrayExpression(args[0])) {
+            if (this.hasAnonRegister) {
+              throw new Error('Source ' + this.name + ' has multiple anonymous System.register calls.');
+            }
+            this.hasAnonRegister = true;
+            if (opts.moduleName) {
+              args.unshift(t.stringLiteral(opts.moduleName));
+            }
           }
         }
       }
