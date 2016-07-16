@@ -1,4 +1,5 @@
 {
+  "name": "babel-plugin-transform-system-register",
   "version": "0.0.0",
   "description": "TODO",
   "repository": {
@@ -6,10 +7,13 @@
     "url": "http://github.com/asapach/babel-plugin-transform-system-register.git"
   },
   "author": "Aliaksei Sapach <dreamsonic@tut.by>",
+  "license": "MIT",
   "main": "lib/index.js",
   "devDependencies": {
     "babel-cli": "^6.4.5",
+    "babel-core": "^6.10.4",
     "babel-preset-es2015": "^6.3.13",
+    "babel-register": "^6.9.0",
     "mocha": "^2.2.5",
     "rimraf": "^2.5.3"
   },
