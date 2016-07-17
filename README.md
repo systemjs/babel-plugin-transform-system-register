@@ -1,21 +1,19 @@
 # babel-plugin-transform-system-register
 
-TODO
+Converts anonymous `System.register([]` into named `System.register('name', [], ...`
 
 ## Example
 
 **In**
 
 ```js
-// input code
+System.register([], function () {});
 ```
 
 **Out**
 
 ```js
-"use strict";
-
-// output code
+System.register("foo", [], function () {});
 ```
 
 ## Installation
@@ -26,13 +24,18 @@ $ npm install babel-plugin-transform-system-register
 
 ## Usage
 
-### Via `.babelrc` (Recommended)
+### Via `.babelrc`
 
 **.babelrc**
 
 ```json
 {
-  "plugins": ["transform-system-register"]
+  "plugins": [
+    ["transform-system-register", {
+      "moduleName": "foo",
+      "systemGlobal": "SystemJS"
+    }]
+  ]
 }
 ```
 
@@ -42,10 +45,18 @@ $ npm install babel-plugin-transform-system-register
 $ babel --plugins transform-system-register script.js
 ```
 
-### Via Node API
+### Via Node API (Recommended)
 
 ```javascript
 require("babel-core").transform("code", {
-  plugins: ["transform-system-register"]
+  plugins: [
+    ["transform-system-register", {
+      moduleName: "foo",
+      systemGlobal: "SystemJS",
+      map: function(name) {
+        return normalize(name);
+      }
+    }]
+  ]
 });
 ```

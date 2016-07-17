@@ -1,7 +1,7 @@
 {
   "name": "babel-plugin-transform-system-register",
   "version": "0.0.0",
-  "description": "TODO",
+  "description": "Converts anonymous System.register([] into named System.register('name', [], ...",
   "repository": {
     "type": "git",
     "url": "http://github.com/asapach/babel-plugin-transform-system-register.git"

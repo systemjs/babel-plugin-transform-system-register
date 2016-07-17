@@ -18,8 +18,7 @@ export default function ({ types: t }) {
             t.isIdentifier(callee.property, { name: 'register' })) {
           callee.object.name = opts.systemGlobal || 'System';
 
-          const firstArg = args[0];
-          let declare = args[1];
+          let [firstArg, declare] = args;
 
           // System.register(deps, declare)
           if (t.isArrayExpression(firstArg)) {
