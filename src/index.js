@@ -1,21 +1,28 @@
+const findModuleNameVisitor = {
+  Identifier({ node }) {
+    if (node.name === '__moduleName')
+      this.usesModuleName = true;
+  }
+};
+
 export default function ({ types: t }) {
   return {
     visitor: {
       CallExpression(path, { opts = {} }) {
-        var callee = path.node.callee;
-        var args = path.node.arguments;
+        const callee = path.node.callee;
+        const args = path.node.arguments;
         if (t.isMemberExpression(callee) &&
             t.isIdentifier(callee.object, { name: 'System' }) &&
             t.isIdentifier(callee.property, { name: 'register' })) {
           callee.object.name = opts.systemGlobal || 'System';
 
           const firstArg = args[0];
+          let declare = args[1];
 
           // System.register(deps, declare)
           if (t.isArrayExpression(firstArg)) {
-            if (this.hasAnonRegister) {
+            if (this.hasAnonRegister)
               throw new Error(`Source ${this.name} has multiple anonymous System.register calls.`);
-            }
 
             // normalize dependencies in array
             // NB add metadata.deps here too
@@ -29,6 +36,21 @@ export default function ({ types: t }) {
 
             if (opts.moduleName) {
               args.unshift(t.stringLiteral(opts.moduleName));
+            }
+          }
+          // System.register(name, deps, declare)
+          else {
+            declare = args[2];
+          }
+
+          // contains a __moduleName reference, while System.register declare function doesn't have a __moduleName argument
+          // so add it
+          // this is backwards compatibility for https://github.com/systemjs/builder/issues/416
+          if (t.isFunctionExpression(declare) && declare.params.length === 1) {
+            const state = {};
+            path.traverse(findModuleNameVisitor, state);
+            if (state.usesModuleName) {
+              declare.params.push(t.identifier('__moduleName'));
             }
           }
         }
