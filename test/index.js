@@ -31,7 +31,7 @@ describe('Plugin', () => {
 
         assert.throws(() => {
           transformFileSync(actualPath, options);
-        }, exception);
+        }, new RegExp(exception));
       } else {
         const actual = transformFileSync(actualPath, options).code;
         const expected = fs.readFileSync(

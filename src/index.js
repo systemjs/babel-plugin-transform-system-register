@@ -32,6 +32,16 @@ export default function ({ types: t }) {
             }
           }
         }
+      },
+      Program: {
+        exit() {
+          // if the transformer didn't find an anonymous System.register
+          // then this is a bundle itself
+          // so we need to reconstruct files with load.metadata.execute etc
+          // if this comes up, we can tackle it or work around it
+          if (!this.hasAnonRegister)
+            throw new TypeError(`Source ${this.name} is already a bundle file, so can't be built as a module.`);
+        }
       }
     }
   };
