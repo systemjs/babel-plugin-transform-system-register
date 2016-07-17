@@ -5,6 +5,8 @@ const findModuleNameVisitor = {
   }
 };
 
+// converts anonymous System.register([] into named System.register('name', [], ...
+// NB need to add that if no anon, last named must define this module
 export default function ({ types: t }) {
   return {
     visitor: {
